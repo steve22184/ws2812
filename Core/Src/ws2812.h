@@ -123,7 +123,6 @@ public:
 	{}
 	WS2812 &operator=(const WS2812&)=delete;
 
-
 	inline void next_mode(void){
 		Mcucpp::Atomic::FetchAndAdd(&state.mode, 1);
 	}
