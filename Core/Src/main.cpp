@@ -117,7 +117,6 @@ int main(void)
   Demo();
   BrightFloat();
 
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
