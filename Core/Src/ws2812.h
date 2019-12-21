@@ -218,7 +218,6 @@ public:
 		Send_DMA();
 	}
 
-
 	void run_line_forward(void){
 		uint32_t last = LED_NUMBER - 1;
 		uint32_t temp = leds[last];
