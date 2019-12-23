@@ -1,22 +1,58 @@
+/*
+ * ws2812.h
+ *
+ *  Created on: 23 дек. 2019 г.
+ *      Author: ALScode
+ * All rights reserved.
+
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 #ifndef WS2812_H_
 #define WS2812_H_
 
 
-/****************** Includes **********************************************************************/
+/*******************************************************************************
+*  Includes
+*******************************************************************************/
 #pragma once
 
 #include "mcu_header.h"
 #include "array.h"
 #include "delegate.h"
 
-/****************** Exported types ****************************************************************/
-//extern TIM_HandleTypeDef htim5;
-//extern RNG_HandleTypeDef hrng;
 
 namespace ws2812 {
-/****************** Defines ***********************************************************************/
+/*******************************************************************************
+*  Defines
+*******************************************************************************/
 
-/****************** Enum / Struct declaration *****************************************************/
+/*******************************************************************************
+*  Constants and varibles
+*******************************************************************************/
+const uint32_t MCU_FREQ = 72000000; // Defined by user according system clock;
+
+/*******************************************************************************
+*  Enums
+*******************************************************************************/
 typedef enum{
 	LED_NUMBER = 16, // Defined by user according number of leds in the ws2812 device(number + 1(!))
 	LED_FREQ = 800000, // Hz; Defined by user according of the ws2812 clocking.
@@ -24,7 +60,7 @@ typedef enum{
 	LED_HIGH = 900, // ns; Defined by user according of the ws2812 timings.
 	LED_LOW = 350, // ns; Defined by user according of the ws2812 timings.
 	LED_PERIOD = 1250, // ns; Defined by user according of the ws2812 timings.
-	LED_SUMMARY = LED_NUMBER * LED_BITS + 1,
+	LED_SUMMARY = LED_NUMBER * LED_BITS + 1,//!< LED_SUMMARY
 }Led_Params;
 
 typedef enum {
@@ -63,7 +99,10 @@ typedef enum {
 }RGB_24Bit;
 
 
-/****************** Alias declaration *************************************************************/
+/*******************************************************************************
+*  Typenames
+*******************************************************************************/
+
 typedef uint32_t base_type; // Defined by user according MK architecture;
 typedef uint32_t tim_ccr_size; // Defined by user according timer used;
 typedef Mcucpp::Atomic atomic; // Defined by user according necessity of atomic access;
@@ -72,15 +111,16 @@ typedef
 typedef
 		Mcucpp::Containers::FixedArray<LED_NUMBER, base_type, atomic>& Leds;
 
-/****************** Constants ********************************************************************/
-const base_type MCU_FREQ = 72000000; // Defined by user according system clock;
-
-/****************** Local function declaration ***************************************************/
+/*******************************************************************************
+*  Local functions declarations
+*******************************************************************************/
 
 void Send_DMA (void);
 base_type Get_RNG24bit(void);
 
-/****************** Struct / Class declaration *****************************************************/
+/*******************************************************************************
+*  Struct / Classes
+*******************************************************************************/
 
 typedef struct{
 	volatile base_type mode;
@@ -90,6 +130,7 @@ typedef struct{
 	bool flag;
 }WS2812_State;
 
+/*----------------------------------------------------------------------------*/
 
 template <base_type MCU_FREQ>
 class Pwm_Params{
@@ -98,6 +139,7 @@ public:
 	enum { low = (MCU_FREQ / LED_FREQ)*LED_LOW / LED_PERIOD};
 };
 
+/*----------------------------------------------------------------------------*/
 
 class LedManage {
 public:
@@ -108,11 +150,13 @@ public:
 	static void set_line (Leds leds, Colours colours, Bright_Params div);
 
 private:
-	static void set_color (Colours colours, base_type iterator, base_type color, Bright_Params div);
-	static void set_led (Colours colours, base_type iterator, base_type led, Bright_Params div);
+	static void set_color (Colours colours, base_type iterator,
+							base_type color, Bright_Params div);
+	static void set_led (Colours colours, base_type iterator,
+							base_type led, Bright_Params div);
 };
 
-
+/*----------------------------------------------------------------------------*/
 
 template<class LedManage>
 class WS2812{
@@ -294,11 +338,11 @@ private:
 };
 
 
-/****************** Init function declaration *****************************************************/
+/*******************************************************************************
+*  Public functions declarations
+*******************************************************************************/
 
 WS2812<LedManage> &ws();
-
-/****************** Public function declaration ***************************************************/
 
 
 } // End of ws2812 namespase
