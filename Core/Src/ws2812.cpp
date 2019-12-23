@@ -63,7 +63,7 @@ static WS2812<LedManage> ws2812(colours, leds);
 *  Class methods
 *******************************************************************************/
 
-void LedManage::set_color (Colours colours, base_type iterator, base_type color, Bright_Params div){
+void LedManage::set_color (base_type iterator, base_type color, Bright_Params div){
 	base_type tcolor = static_cast<base_type>(color / div);
 
 	for (uint8_t i = 0; i != 8; ++i){
@@ -75,16 +75,16 @@ void LedManage::set_color (Colours colours, base_type iterator, base_type color,
 	}
 }
 
-void LedManage::set_led (Colours colours, base_type iterator, base_type led, Bright_Params div){
-	set_color(colours, iterator, (led >> 8) & 0xFF, div);
-	set_color(colours, iterator + 8, (led >> 16) & 0xFF, div);
-	set_color(colours, iterator + 16, led & 0xFF, div);
+void LedManage::set_led (base_type iterator, base_type led, Bright_Params div){
+	set_color(iterator, (led >> 8) & 0xFF, div);
+	set_color(iterator + 8, (led >> 16) & 0xFF, div);
+	set_color(iterator + 16, led & 0xFF, div);
 }
 
-void LedManage::set_line (Leds leds, Colours colours, Bright_Params div){
+void LedManage::set_line (Bright_Params div){
 
 	for (uint32_t i = 0; i != LED_NUMBER; ++i){
-		set_led(colours, i * LED_BITS, leds[i], div);
+		set_led(i * LED_BITS, leds[i], div);
 	}
 }
 

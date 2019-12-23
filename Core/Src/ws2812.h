@@ -103,7 +103,7 @@ typedef enum {
 *  Typenames
 *******************************************************************************/
 
-typedef uint32_t base_type; // Defined by user according MK architecture;
+typedef uint32_t base_type; // Defined by user according MC architecture;
 typedef uint32_t tim_ccr_size; // Defined by user according timer used;
 typedef Mcucpp::Atomic atomic; // Defined by user according necessity of atomic access;
 typedef
@@ -147,13 +147,11 @@ public:
 	LedManage(const LedManage&)=delete;
 	LedManage &operator=(const LedManage&)=delete;
 
-	static void set_line (Leds leds, Colours colours, Bright_Params div);
+	static void set_line (Bright_Params div);
 
 private:
-	static void set_color (Colours colours, base_type iterator,
-							base_type color, Bright_Params div);
-	static void set_led (Colours colours, base_type iterator,
-							base_type led, Bright_Params div);
+	static void set_color (base_type iterator, base_type color, Bright_Params div);
+	static void set_led (base_type iterator, base_type led, Bright_Params div);
 };
 
 /*----------------------------------------------------------------------------*/
@@ -227,7 +225,7 @@ public:
 			led = 0;
 		}
 
-		LedManage::set_line(leds, colours, state.bright);
+		LedManage::set_line(state.bright);
 		Send_DMA();
 	}
 
@@ -236,7 +234,7 @@ public:
 		std::for_each(&leds[begin], &leds[end], [color](base_type& led)
 				{ led = static_cast<base_type>(color); });
 
-		LedManage::set_line(leds, colours, state.bright);
+		LedManage::set_line(state.bright);
 		Send_DMA();
 	}
 
@@ -258,7 +256,7 @@ public:
 			}
 		}
 
-		LedManage::set_line(leds, colours, static_cast<Bright_Params>(div));
+		LedManage::set_line(static_cast<Bright_Params>(div));
 		Send_DMA();
 	}
 
@@ -272,7 +270,7 @@ public:
 
 		leds[0] = temp;
 
-		LedManage::set_line(leds, colours, state.bright);
+		LedManage::set_line(state.bright);
 		Send_DMA();
 	}
 	void run_line_back(void){
@@ -285,7 +283,7 @@ public:
 
 		leds[last] = temp;
 
-		LedManage::set_line(leds, colours, state.bright);
+		LedManage::set_line(state.bright);
 		Send_DMA();
 	}
 
@@ -310,7 +308,7 @@ public:
 				state.counter = 0;
 			}
 		}
-		LedManage::set_line(leds, colours, state.bright);
+		LedManage::set_line(state.bright);
 		Send_DMA();
 	}
 	void shift_color(void){
@@ -321,7 +319,7 @@ public:
 							led = (led >> 8) | (temp << 16);
 						});
 
-		LedManage::set_line(leds, colours, state.bright);
+		LedManage::set_line(state.bright);
 		Send_DMA();
 	}
 
